@@ -1,0 +1,17 @@
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+
+
+# logs
+*.log
+
+# Terraform directories
+**/.terraform/*
+*.code-workspace
+
+.idea/
+
+
+__pycache__
