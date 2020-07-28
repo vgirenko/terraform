@@ -7,7 +7,7 @@ resource aws_vpc my_vpc {
 resource aws_internet_gateway igw {
   vpc_id = aws_vpc.my_vpc.id
 }
-data aws_availability_zone my_zones {
+data aws_availability_zones my_zones {
   state = "available"
 }
 resource aws_subnet public-subnets {
