@@ -8,11 +8,11 @@ variable vpc_cidr_block {
 }
 variable public_subnets {
   description = "A map of availability zones to CIDR blocks, which will be set up as public subnets"
-  type        = map
+  type        = list
 }
 variable private_subnets {
   description = "A map of availability zones to CIDR blocks, which will be set up as private subnets"
-  type        = map
+  type        = list
 }
 variable ingress_ports {
   description = "A list of service ports for ingress traffic"
