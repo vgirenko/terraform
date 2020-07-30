@@ -15,15 +15,21 @@ resource aws_subnet public-subnets {
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = element(var.public_subnets, count.index)
   map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.my_zones.names[0]
+  availability_zone       = data.aws_availability_zones.my_zones.names[count.index]
   depends_on              = [aws_internet_gateway.igw]
+  tags = {
+    Name = "public_subnet_${count.index+1}"
+  }
 }
 resource aws_subnet private-subnets {
   count                   = length(var.private_subnets)
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = element(var.private_subnets, count.index)
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.my_zones.names[1]
+  availability_zone       = data.aws_availability_zones.my_zones.names[count.index]
+  tags = {
+    Name = "private_subnet_${count.index+1}"
+  }
 }
 resource aws_route_table public {
   vpc_id = aws_vpc.my_vpc.id
