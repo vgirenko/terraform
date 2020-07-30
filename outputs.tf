@@ -1,5 +1,5 @@
-output vpc_cidr_block {
+output vpc_id {
   value       = aws_vpc.my_vpc.id
-  sensitive   = true
-  description = "VPC CIDR block"
+  sensitive   = false
+  description = "VPC ID"
 }
