@@ -31,6 +31,16 @@ resource aws_subnet private-subnets {
     Name = "private_subnet_${count.index+1}"
   }
 }
+resource aws_eip nat {
+  count = length(var.public_subnets)
+  vpc = true
+}
+resource aws_nat_gateway nat {
+  depends_on    = [aws_internet_gateway.igw]
+  count         = length(var.public_subnets)
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public-subnets[count.index].id
+}
 resource aws_route_table public {
   vpc_id = aws_vpc.my_vpc.id
   route {
