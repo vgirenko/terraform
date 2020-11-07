@@ -1,21 +1,21 @@
-resource aws_vpc my_vpc {
+resource aws_vpc vg_vpc {
   cidr_block = var.vpc_cidr_block
   tags = {
-    Name = "my_vpc"
+    Name = "vg_vpc"
   }
 }
 resource aws_internet_gateway igw {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = aws_vpc.vg_vpc.id
 }
-data aws_availability_zones my_zones {
+data aws_availability_zones vg_zones {
   state = "available"
 }
 resource aws_subnet public-subnets {
   count                   = length(var.public_subnets)
-  vpc_id                  = aws_vpc.my_vpc.id
+  vpc_id                  = aws_vpc.vg_vpc.id
   cidr_block              = element(var.public_subnets, count.index)
   map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.my_zones.names[count.index]
+  availability_zone       = data.aws_availability_zones.vg_zones.names[count.index]
   depends_on              = [aws_internet_gateway.igw]
   tags = {
     Name = "public_subnet_${count.index+1}"
@@ -23,10 +23,10 @@ resource aws_subnet public-subnets {
 }
 resource aws_subnet private-subnets {
   count                   = length(var.private_subnets)
-  vpc_id                  = aws_vpc.my_vpc.id
+  vpc_id                  = aws_vpc.vg_vpc.id
   cidr_block              = element(var.private_subnets, count.index)
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.my_zones.names[count.index]
+  availability_zone       = data.aws_availability_zones.vg_zones.names[count.index]
   tags = {
     Name = "private_subnet_${count.index+1}"
   }
@@ -42,7 +42,7 @@ resource aws_nat_gateway nat {
   subnet_id     = aws_subnet.public-subnets[count.index].id
 }
 resource aws_route_table public {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = aws_vpc.vg_vpc.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
@@ -53,8 +53,8 @@ resource aws_route_table_association public-subnets {
   subnet_id      = element(aws_subnet.public-subnets.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
-resource aws_security_group my_group {
-  name = "my_security_group"
+resource aws_security_group vg_group {
+  name = "vg_security_group"
 
   dynamic "ingress" {
     for_each = var.ingress_ports
