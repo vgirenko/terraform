@@ -1,26 +1,13 @@
-//data "aws_eks_cluster" "cluster" {
-//  name = module.vg-cluster.cluster_id
-//}
-//data "aws_eks_cluster_auth" "cluster" {
-//  name = module.vg-cluster.cluster_id
-//}
-//data "aws_subnet" "private" {
-//  for_each = aws_subnet.private-subnets.id
-//
-//  id = each.value
-//}
-//module "vg-cluster" {
-//  source          = "terraform-aws-modules/eks/aws"
-//  #count           = 1
-//  cluster_name    = "vg-cluster"
-//  cluster_version = "1.17"
-//  subnets         = data.aws_subnet.private.id
-//  vpc_id          = aws_vpc.vg_vpc.id
-//
-//  worker_groups = [
-//    {
-//      instance_type = "a1.large"
-//      asg_max_size  = 5
-//    }
-//  ]
-//}
+resource aws_eks_cluster vg_eks_cluster {
+  name     = "vg_cluster"
+  role_arn = aws_iam_role.vg_eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids = [aws_subnet.private-subnets[0].id, aws_subnet.private-subnets[1].id]
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_iam_role_policy_attachment.eks_cluster_eks_vpc_resource_controller,
+  ]
+}

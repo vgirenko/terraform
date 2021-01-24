@@ -3,7 +3,6 @@
 *.tfstate.backup
 *.tfstate.lock.info
 
-
 # logs
 *.log
 
@@ -12,6 +11,5 @@
 *.code-workspace
 
 .idea/
-
 
 __pycache__
