@@ -8,6 +8,16 @@ data aws_iam_policy_document eks_assume_role_policy {
     }
   }
 }
+data aws_iam_policy_document eks_node_group_assume_role_policy {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["ec2.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
 resource aws_iam_role vg_eks_cluster_role {
   name = "vg-eks-cluster"
   assume_role_policy = data.aws_iam_policy_document.eks_assume_role_policy.json
@@ -21,8 +31,8 @@ resource aws_iam_role_policy_attachment eks_cluster_eks_vpc_resource_controller 
   role       = aws_iam_role.vg_eks_cluster_role.name
 }
 resource aws_iam_role vg_eks_node_group {
-  name = "vg-eks-mode-group"
-  assume_role_policy = data.aws_iam_policy_document.eks_assume_role_policy.json
+  name = "vg-eks-node-group"
+  assume_role_policy = data.aws_iam_policy_document.eks_node_group_assume_role_policy.json
 }
 resource aws_iam_role_policy_attachment AmazonEKSWorkerNodePolicy {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"

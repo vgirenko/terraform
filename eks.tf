@@ -14,7 +14,7 @@ resource aws_eks_cluster vg_eks_cluster {
 resource aws_eks_node_group vg-node-group {
   cluster_name    = aws_eks_cluster.vg_eks_cluster.name
   node_group_name = "vg-eks-node-group"
-  node_role_arn   = aws_iam_role.vg_eks_node_group.name
+  node_role_arn   = aws_iam_role.vg_eks_node_group.arn
   subnet_ids      = [aws_subnet.private-subnets[0].id, aws_subnet.private-subnets[1].id]
   capacity_type   = "SPOT"
 
@@ -23,4 +23,9 @@ resource aws_eks_node_group vg-node-group {
     max_size     = 2
     min_size     = 1
   }
+  depends_on = [
+  aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+  aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+  aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly
+  ]
 }
