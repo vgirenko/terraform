@@ -24,11 +24,11 @@ resource aws_iam_role vg_eks_node_group {
   name = "vg-eks-mode-group"
   assume_role_policy = data.aws_iam_policy_document.eks_assume_role_policy.json
 }
-resource aws_iam_policy_attachment AmazonEKSWorkerNodePolicy {
+resource aws_iam_role_policy_attachment AmazonEKSWorkerNodePolicy {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.vg_eks_node_group.name
 }
-resource aws_iam_policy_attachment AmazonEKS_CNI_Policy {
+resource aws_iam_role_policy_attachment AmazonEKS_CNI_Policy {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.vg_eks_node_group.name
 }

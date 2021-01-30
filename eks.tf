@@ -16,7 +16,7 @@ resource aws_eks_node_group vg-node-group {
   node_group_name = "vg-eks-node-group"
   node_role_arn   = aws_iam_role.vg_eks_node_group.name
   subnet_ids      = [aws_subnet.private-subnets[0].id, aws_subnet.private-subnets[1].id]
-  capacity_type   = SPOT
+  capacity_type   = "SPOT"
 
   scaling_config {
     desired_size = 1
