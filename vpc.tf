@@ -48,13 +48,30 @@ resource aws_route_table public {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
-    Name = "vg-main"
+    Name = "vg-main-public"
   }
 }
 resource aws_route_table_association public-subnets {
   count          = length(var.public_subnets)
   subnet_id      = element(aws_subnet.public-subnets.*.id, count.index)
   route_table_id = aws_route_table.public.id
+}
+resource aws_route_table private {
+  vpc_id = aws_vpc.vg_vpc.id
+  tags {
+    Name = "vg-main-private"
+  }
+}
+resource aws_route_table_association private-subnets {
+  count = length(var.private_subnets)
+  subnet_id = element(aws_subnet.private-subnets.*id, count.index)
+  route_table_id = aws_route_table.private.id
+}
+resource "aws_route" "private_default" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
+  depends_on             = [aws_route_table.private]
 }
 resource aws_security_group vg_group {
   name = "vg_security_group"
