@@ -58,7 +58,7 @@ resource aws_route_table_association public-subnets {
 }
 resource aws_route_table private {
   vpc_id = aws_vpc.vg_vpc.id
-  tags {
+  tags   = {
     Name = "vg-main-private"
   }
 }
